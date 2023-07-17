@@ -1,0 +1,60 @@
+<html xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>d3-graphviz</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js" integrity="sha256-1rA678n2xEx7x4cTZ5x4wpUCj6kUMZEZ5cxLSVSFWxw=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-graphviz@5.0.2/build/d3-graphviz.min.js" integrity="sha256-ZfMEsKe/ikIdufE9z5YlLwhvTSdfUZSVMqSPGviAnwE=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
+<style type="text/css">
+  body {
+    margin: 20px;
+  }
+  svg {
+    width: 100%;
+    min-height: 600px;
+    margin-bottom: 20px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 200px;
+  }
+</style>
+</head>
+<body>
+
+<div id="graph" style="width: 100%;"></div>
+<textarea id="dot" style="min-width: 600px;" rows="10">
+<%= dot %>
+</textarea>
+
+<script type="text/javascript">
+function renderDot() {
+  var dot = document.getElementById("dot").value;
+  d3.select("#graph")
+    .graphviz()
+      .renderDot(dot);
+}
+
+document.getElementById("dot").addEventListener("input", function() {
+  renderDot();
+});
+document.addEventListener("DOMContentLoaded", function() {
+  renderDot();
+});
+<% if livedraw_endpoint %>
+
+function updateDot() {
+  document.getElementById("dot").value = this.responseText;
+  renderDot();
+}
+
+setInterval(function() {
+  var req = new XMLHttpRequest();
+  req.addEventListener("load", updateDot);
+  req.open("GET", "<%= livedraw_endpoint %>");
+  req.send();
+}, 1000);
+<% end %>
+</script>
+
+</body>

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Renderdot do
-  it "has a version number" do
-    expect(Renderdot::VERSION).not_to be nil
-  end
+  let(:dot) { "digraph { a -> b }" }
 
-  it "does something useful" do
-    expect(false).to eq(true)
+  describe "#render_html" do
+    it do
+      html = Renderdot.render_html(dot)
+      expect(html).to start_with("<html")
+    end
   end
 end
